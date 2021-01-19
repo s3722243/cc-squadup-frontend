@@ -1,87 +1,83 @@
-import React, {Component} from "react";
-import {BrowserRouter as Router, Switch, Route, Link, withRouter} from "react-router-dom";
+import React, { useState } from "react";
+import {BrowserRouter as Router, Link} from "react-router-dom";
 import "bulma/css/bulma.min.css";
 import 'bulmaswatch/darkly/bulmaswatch.min.css'
 import './App.css';
 import Routes from "./Routes";
+import Auth from "@aws-amplify/auth"
+import aws_exports from './aws-exports';
+import useCurrentUser from "./hooks/UseCurrentUser";
 
-class App extends Component {
-    constructor(props) {
-        super(props);
-        this.handleEvent = this.handleEvent.bind(this);
+Auth.configure(aws_exports);
 
-        this.state = {
-            currentUser: undefined,
-            activeHamburger: false,
-        };
+function App() {
+
+    const [isActiveHamburger, setActiveHamburger] = useState(false);
+    const currentUser = useCurrentUser();
+
+    function logout() {
+
     }
 
-    handleEvent() {
-        this.setState({activeHamburger: !this.state.activeHamburger});
-    }
-
-
-    render() {
-        return (
-            <Router>
-                <div>
-                    <nav className="navbar">
-                        <div class="container">
-                            <div class="navbar-brand">
-                                <Link to={"/"} className="navbar-item brand-text">
-                                    SquadUp
-                                </Link>
-                                <div
-                                    class={`navbar-burger burger ${this.state.activeHamburger ? "is-active" : ""}`}
-                                    onClick={this.handleEvent}
-                                    data-target="navMenu"
-                                >
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </div>
+    return (
+        <Router>
+            <div>
+                <nav className="navbar">
+                    <div className="container">
+                        <div className="navbar-brand">
+                            <Link to={"/"} className="navbar-item brand-text">
+                                SquadUp
+                            </Link>
+                            <div
+                                className={`navbar-burger burger ${isActiveHamburger ? "is-active" : ""}`}
+                                onClick={() => setActiveHamburger(!isActiveHamburger)}
+                                data-target="navMenu"
+                            >
+                                <span/>
+                                <span/>
+                                <span/>
                             </div>
-                            <div id="navMenu" class={`navbar-menu ${this.state.activeHamburger ? "is-active" : ""}`}>
-                                <div class="navbar-start">
-                                    <Link to={"/about"} className="navbar-item">
-                                        About us
-                                    </Link>
-
-                                    <Link to={"/contact"} className="navbar-item">
-                                        Contact us
-                                    </Link>
-                                </div>
-
-                                {/*{currentUser ? (*/}
-                                {/*    <div className="navbar-end">*/}
-                                {/*        <Link to={"/profile"} className="navbar-item">*/}
-                                {/*            {currentUser.username}*/}
-                                {/*        </Link>*/}
-                                {/*        <Link className="navbar-item" onClick={this.logout}>*/}
-                                {/*            Logout*/}
-                                {/*        </Link>*/}
-                                {/*    </div>*/}
-                                {/*) : (*/}
-                                {/*    <div className="navbar-end">*/}
-                                {/*        <Link to={"/login"} className="navbar-item">*/}
-                                {/*            Login*/}
-                                {/*        </Link>*/}
-                                {/*        <Link to={"/register"} className="navbar-item">*/}
-                                {/*            Register*/}
-                                {/*        </Link>*/}
-                                {/*    </div>*/}
-                                {/*)}*/}
-                            </div>
-
                         </div>
-                    </nav>
-                    <div className="container mt-3">
-                        <Routes/>
+                        <div id="navMenu" className={`navbar-menu ${isActiveHamburger ? "is-active" : ""}`}>
+                            <div className="navbar-start">
+                                <Link to={"/about"} className="navbar-item">
+                                    About us
+                                </Link>
+
+                                <Link to={"/contact"} className="navbar-item">
+                                    Contact us
+                                </Link>
+                            </div>
+
+                            {currentUser ? (
+                                <div className="navbar-end">
+                                    <Link to={"/profile"} className="navbar-item">
+                                        {currentUser.username}
+                                    </Link>
+                                    <Link className="navbar-item" onClick={() => logout}>
+                                        Logout
+                                    </Link>
+                                </div>
+                            ) : (
+                                <div className="navbar-end">
+                                    <Link to={"/login"} className="navbar-item">
+                                        Login
+                                    </Link>
+                                    <Link to={"/register"} className="navbar-item">
+                                        Register
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
+
                     </div>
+                </nav>
+                <div className="container mt-3">
+                    <Routes/>
                 </div>
-            </Router>
-        );
-    }
+            </div>
+        </Router>
+    );
 }
 
-export default withRouter(App);
+export default App;
