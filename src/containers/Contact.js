@@ -10,7 +10,7 @@ export default class Contact extends Component {
     return (
       <div className="container">
         <header className="jumbotron">
-          <h3>Contact us</h3>
+          <h3 className="title is-3">Contact us</h3>
         </header>
       </div>
     );

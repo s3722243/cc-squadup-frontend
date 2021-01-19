@@ -10,7 +10,7 @@ export default class About extends Component {
     return (
       <div className="container">
         <header className="jumbotron">
-          <h3>About us</h3>
+          <h3 className="title is-3">About us</h3>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin congue pulvinar purus, at iaculis justo lacinia id. Vestibulum feugiat nunc lectus, vel iaculis nibh semper id. Pellentesque non elit tempor, congue diam lacinia, varius elit. Donec libero ipsum, posuere ullamcorper lobortis non, suscipit eget lacus. Cras euismod mi tortor, efficitur gravida lacus viverra sed. Nullam laoreet euismod urna non consequat. Suspendisse efficitur, nulla a sagittis laoreet, nisi nisi gravida tortor, in efficitur risus tortor sed diam. Suspendisse mattis nunc nibh, a laoreet tellus lobortis a. Morbi fermentum gravida libero, non elementum nulla congue at. Suspendisse tortor dui, aliquam ac eleifend a, dapibus eu tellus. Etiam non hendrerit mauris.
           </p>

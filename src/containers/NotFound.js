@@ -10,7 +10,7 @@ export default class NotFound extends Component {
         return (
             <div className="container">
                 <header className="jumbotron">
-                    <h3>Page not found!</h3>
+                    <h3 className="title is-3">Page not found!</h3>
                 </header>
             </div>
         );

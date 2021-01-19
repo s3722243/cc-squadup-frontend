@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 
 export default class Home extends Component {
     constructor(props) {
@@ -9,7 +9,7 @@ export default class Home extends Component {
         return (
             <div className="container">
                 <header className="jumbotron">
-                    <h3>Welcome to SquadUp!</h3>
+                    <h3 className="title is-3">Welcome to SquadUp!</h3>
                 </header>
             </div>
         );
