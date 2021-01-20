@@ -15,8 +15,9 @@ function App() {
     const [isActiveHamburger, setActiveHamburger] = useState(false);
     const currentUser = useCurrentUser();
 
-    function logout() {
-
+    async function logout() {
+        Auth.signOut();
+        window.location.reload(true);
     }
 
     return (
@@ -54,7 +55,7 @@ function App() {
                                     <Link to={"/profile"} className="navbar-item">
                                         {currentUser.username}
                                     </Link>
-                                    <Link className="navbar-item" onClick={() => logout}>
+                                    <Link className="navbar-item" onClick={logout}>
                                         Logout
                                     </Link>
                                 </div>

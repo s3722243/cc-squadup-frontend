@@ -1,9 +1,11 @@
 import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {Auth} from "@aws-amplify/auth"
+import { useHistory } from 'react-router-dom'
 
 
 export default function Login() {
+    const history = useHistory();
     const [isLoading, setLoading] = useState(false);
     const {register, handleSubmit, errors} = useForm();
 
@@ -12,6 +14,7 @@ export default function Login() {
         try {
             await Auth.signIn(input.username, input.password);
             console.log("Logged in!")
+            history.push("/")
 
         } catch (e) {
             console.log("An error occurred logging in:" + e)
