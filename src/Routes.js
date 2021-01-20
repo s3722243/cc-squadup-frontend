@@ -4,6 +4,7 @@ import About from "./containers/About";
 import Contact from "./containers/Contact";
 import Home from "./containers/Home";
 import NotFound from "./containers/NotFound";
+import Login from "./containers/Login";
 
 export default function Routes() {
     return (
@@ -11,6 +12,7 @@ export default function Routes() {
             <Route exact path={"/"} component={Home}/>
             <Route exact path="/about" component={About}/>
             <Route exact path="/contact" component={Contact}/>
+            <Route exact path="/login" component={Login}/>
             <Route component={NotFound}/>
         </Switch>
     );
