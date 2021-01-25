@@ -5,6 +5,7 @@
   "dependencies": {
     "@aws-amplify/auth": "^3.4.17",
     "@aws-amplify/core": "^3.8.9",
+    "@fortawesome/fontawesome-free": "^5.15.2",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.3",
     "@testing-library/user-event": "^12.6.0",

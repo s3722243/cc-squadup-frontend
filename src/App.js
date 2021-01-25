@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {BrowserRouter as Router, Link} from "react-router-dom";
 import "bulma/css/bulma.min.css";
 import 'bulmaswatch/darkly/bulmaswatch.min.css'
+import "@fortawesome/fontawesome-free/css/all.css";
 import './App.css';
 import Routes from "./Routes";
 import Auth from "@aws-amplify/auth"
@@ -16,7 +17,7 @@ function App() {
     const currentUser = useCurrentUser();
 
     async function logout() {
-        Auth.signOut();
+        await Auth.signOut();
         window.location.reload(true);
     }
 
@@ -27,7 +28,7 @@ function App() {
                     <div className="container">
                         <div className="navbar-brand">
                             <Link to={"/"} className="navbar-item brand-text">
-                                SquadUp
+                                <p className="title">SquadUp</p>
                             </Link>
                             <div
                                 className={`navbar-burger burger ${isActiveHamburger ? "is-active" : ""}`}
@@ -42,12 +43,14 @@ function App() {
                         <div id="navMenu" className={`navbar-menu ${isActiveHamburger ? "is-active" : ""}`}>
                             <div className="navbar-start">
                                 <Link to={"/about"} className="navbar-item">
-                                    About us
+                                    About
                                 </Link>
 
-                                <Link to={"/contact"} className="navbar-item">
-                                    Contact us
+                                {currentUser &&
+                                <Link to={"/find"} className="navbar-item">
+                                    Find players
                                 </Link>
+                                }
                             </div>
 
                             {currentUser ? (
@@ -70,7 +73,6 @@ function App() {
                                 </div>
                             )}
                         </div>
-
                     </div>
                 </nav>
                 <div className="container mt-3">
