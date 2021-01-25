@@ -23,61 +23,59 @@ function App() {
 
     return (
         <Router>
-            <div>
-                <nav className="navbar">
-                    <div className="container">
-                        <div className="navbar-brand">
-                            <Link to={"/"} className="navbar-item brand-text">
-                                <p className="title">SquadUp</p>
-                            </Link>
-                            <div
-                                className={`navbar-burger burger ${isActiveHamburger ? "is-active" : ""}`}
-                                onClick={() => setActiveHamburger(!isActiveHamburger)}
-                                data-target="navMenu"
-                            >
-                                <span/>
-                                <span/>
-                                <span/>
-                            </div>
-                        </div>
-                        <div id="navMenu" className={`navbar-menu ${isActiveHamburger ? "is-active" : ""}`}>
-                            <div className="navbar-start">
-                                <Link to={"/about"} className="navbar-item">
-                                    About
-                                </Link>
-
-                                {currentUser &&
-                                <Link to={"/find"} className="navbar-item">
-                                    Find players
-                                </Link>
-                                }
-                            </div>
-
-                            {currentUser ? (
-                                <div className="navbar-end">
-                                    <Link to={"/profile"} className="navbar-item">
-                                        {currentUser.username}
-                                    </Link>
-                                    <Link className="navbar-item" onClick={logout}>
-                                        Logout
-                                    </Link>
-                                </div>
-                            ) : (
-                                <div className="navbar-end">
-                                    <Link to={"/login"} className="navbar-item">
-                                        Login
-                                    </Link>
-                                    <Link to={"/register"} className="navbar-item">
-                                        Register
-                                    </Link>
-                                </div>
-                            )}
+            <nav className="navbar" style={{backgroundColor: "#39434d"}}>
+                <div className="container">
+                    <div className="navbar-brand">
+                        <Link to={"/"} className="navbar-item" style={{fontWeight: "bold"}}>
+                            <p className="title" style={{fontWeight: "bold"}}>SquadUp</p>
+                        </Link>
+                        <div
+                            className={`navbar-burger burger ${isActiveHamburger ? "is-active" : ""}`}
+                            onClick={() => setActiveHamburger(!isActiveHamburger)}
+                            data-target="navMenu"
+                        >
+                            <span/>
+                            <span/>
+                            <span/>
                         </div>
                     </div>
-                </nav>
-                <div className="container mt-3">
-                    <Routes/>
+                    <div id="navMenu" className={`navbar-menu ${isActiveHamburger ? "is-active" : ""}`}>
+                        <div className="navbar-start">
+                            <Link to={"/about"} className="navbar-item">
+                                About
+                            </Link>
+
+                            {currentUser &&
+                            <Link to={"/find"} className="navbar-item">
+                                Find players
+                            </Link>
+                            }
+                        </div>
+
+                        {currentUser ? (
+                            <div className="navbar-end">
+                                <Link to={"/profile"} className="navbar-item">
+                                    {currentUser.username}
+                                </Link>
+                                <Link to={"/"} className="navbar-item" onClick={logout}>
+                                    Logout
+                                </Link>
+                            </div>
+                        ) : (
+                            <div className="navbar-end">
+                                <Link to={"/login"} className="navbar-item">
+                                    Login
+                                </Link>
+                                <Link to={"/register"} className="navbar-item">
+                                    Register
+                                </Link>
+                            </div>
+                        )}
+                    </div>
                 </div>
+            </nav>
+            <div className="container mt-3">
+                <Routes/>
             </div>
         </Router>
     );

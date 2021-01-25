@@ -19,46 +19,50 @@ export default function Find() {
                                     <div className="content">
                                         <div className="control has-icons-left">
                                             <input className="input" type="text" placeholder="Search games"/>
-                                            <span className="icon is-left">
-                                                    <i className="fa fa-search"/>
-                                                </span>
+                                            <span className="icon is-left"><i className="fa fa-search"/></span>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="card">
-                                <header className="card-header">
-                                    <p className="card-header-title">Recently played</p>
-                                    <div className="card-table">
-                                        <div className="content">
-                                            <table className="table is-fullwidth is-striped">
-                                            </table>
-                                        </div>
+                                <div className="card-table">
+                                    <div className="content">
+                                        <table className="table is-fullwidth is-striped">
+                                        </table>
                                     </div>
-                                </header>
+                                </div>
                             </div>
-                            <div className="card">
+                            <div className="card mt-3">
+                                <header className="card-header">
+                                    <p className="card-header-title">Recently played games</p>
+                                </header>
+                                <div className="card-table">
+                                    <div className="content">
+                                        <table className="table is-fullwidth is-striped">
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="card mt-3">
                                 <header className="card-header">
                                     <p className="card-header-title">Popular games</p>
-                                    <div className="card-table">
-                                        <div className="content">
-                                            <table className="table is-fullwidth is-striped">
-                                            </table>
-                                        </div>
-                                    </div>
                                 </header>
+                                <div className="card-table">
+                                    <div className="content">
+                                        <table className="table is-fullwidth is-striped">
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div className="column is-8 ">
                             <div className="card">
                                 <header className="card-header">
-                                    <p className="card-header-title">Find players</p>
-                                    <div className="card-content">
-                                        <div className="content">
-
-                                        </div>
-                                    </div>
                                 </header>
+                                <p className="card-header-title">Find players</p>
+                                <div className="card-content">
+                                    <div className="content">
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
