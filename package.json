@@ -10,6 +10,8 @@
     "@testing-library/react": "^11.2.3",
     "@testing-library/user-event": "^12.6.0",
     "aws-amplify": "^3.3.14",
+    "axios": "^0.21.1",
+    "axios-hooks": "^2.3.0",
     "bulma": "^0.9.1",
     "bulmaswatch": "^0.8.1",
     "react": "^17.0.1",

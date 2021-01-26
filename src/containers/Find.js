@@ -1,5 +1,6 @@
 import useCurrentUser from "../hooks/UseCurrentUser";
 import RecentlyPlayedGames from "./RecentlyPlayedGames";
+import PopularGames from "./PopularGames";
 
 export default function Find() {
     const currentUser = useCurrentUser();
@@ -36,17 +37,7 @@ export default function Find() {
                                 </div>
                             </div>
                             <RecentlyPlayedGames selectedCallback={selectGame}/>
-                            <div className="card mt-3">
-                                <header className="card-header">
-                                    <p className="card-header-title">Popular games</p>
-                                </header>
-                                <div className="card-table">
-                                    <div className="content">
-                                        <table className="table is-fullwidth is-striped">
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
+                            <PopularGames selectedCallback={selectGame}/>
                         </div>
                         <div className="column is-8 ">
                             <div className="card">
