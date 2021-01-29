@@ -21,12 +21,9 @@ export default function SearchGames(props) {
                     execute({
                         params: {
                             key: "2b40908800ad4989923c71fab96f88af",
-                            search: searchQuery,
-
+                            search: searchQuery
                         }
                     });
-                } else {
-
                 }
             }, 750);
             return () => clearTimeout(timeOutId);

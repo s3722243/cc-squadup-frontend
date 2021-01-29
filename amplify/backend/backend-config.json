@@ -1,0 +1,12 @@
+{
+  "auth": {
+    "ccsquadupfrontend962b3b0f": {
+      "service": "Cognito",
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  },
+  "hosting": {}
+}
