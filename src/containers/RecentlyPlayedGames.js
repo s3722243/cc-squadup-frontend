@@ -1,46 +1,76 @@
 import GamesTable from "./GamesTable";
 import useAxios from "axios-hooks";
 import useCurrentUser from "../hooks/UseCurrentUser";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 export default function RecentlyPlayedGames(props) {
     const currentUser = useCurrentUser();
-    const [{data: historyData, loading: historyLoading}, executeHistory] = useAxios(
+    const [finalData, setFinalData] = useState(null);
+    const [finalLoading, setFinalLoading] = useState(true);
+    const [{data: historyData}, executeHistory] = useAxios(
         {
             baseURL: "https://aybxaw98mk.execute-api.us-east-1.amazonaws.com/dev/retrieve-player-info/",
             transformResponse: [function (data) {
-                return JSON.parse(data).sort((a, b) => {
-                    let aDate = new Date(a.dayPlayed);
-                    let bDate = new Date(b.dayPlayed);
-                    return (aDate > bDate) ? 1 : ((bDate > aDate) ? -1 : 0);
-                })
+                let uniqueGames = new Set();
+
+                return JSON.parse(data)
+                    .sort((a, b) => {
+                        let aDate = new Date(a.dayPlayed);
+                        let bDate = new Date(b.dayPlayed);
+                        return (aDate > bDate) ? 1 : ((bDate > aDate) ? -1 : 0);
+                    })
+                    .filter(record => {
+                        if (uniqueGames.has(record.gameId)) {
+                            return false;
+                        } else {
+                            uniqueGames.add(record.gameId);
+                            return true;
+                        }
+                    });
             }],
         },
         {manual: true}
     );
-    const [{data: detailData, loading: detailLoading}, executeDetail] = useAxios(
+    const [, executeDetail] = useAxios(
         {
             baseURL: "https://api.rawg.io/api/games",
-            transformResponse: [function (data) {
-                return JSON.parse(data).results;
-            }]
+            params: {
+                key: "2b40908800ad4989923c71fab96f88af",
+            },
         },
         {manual: true}
     );
 
-
     useEffect(() => {
             if (currentUser) {
                 executeHistory({
-                    url: `/Darknight091`
+                    url: `/${currentUser.getUsername()}`
                 });
             }
         }, [currentUser, executeHistory]
     );
 
     useEffect(() => {
-        console.log(`Yay: ${JSON.stringify(historyData)}`);
-    }, [historyData]);
+        if (historyData) {
+            setFinalLoading(true);
+            Promise.all(
+                historyData.map((record, index) => {
+                    console.log(`Attempting: ${record.gameId}`);
+                    return executeDetail({
+                        url: `/${record.gameId}`
+                    }).then(details => {
+                        historyData[index] = {...historyData[index], ...details.data};
+                    }).catch((error) => {
+                        console.log(`Inside error: ${error}`);
+                    });
+                })).then(() => {
+                setFinalData(historyData);
+                setFinalLoading(false);
+            }).catch((error) => {
+                console.log(`Outside error: ${error}`);
+            });
+        }
+    }, [historyData, executeDetail]);
 
     return (
         <div className="card mt-3">
@@ -49,12 +79,12 @@ export default function RecentlyPlayedGames(props) {
             </header>
             <div className="card-table">
                 <div className="content">
-                    {historyLoading ?
+                    {finalLoading ?
                         <div className="m-3">
                             <progress className="progress is-medium is-dark" max="100"/>
                         </div> :
-                        (historyData != null && historyData.length > 0 ?
-                                <GamesTable selectedCallback={props.selectedCallback} data={historyData}/> :
+                        (finalData != null && finalData.length > 0 ?
+                                <GamesTable selectedCallback={props.selectedCallback} data={finalData}/> :
                                 <div className="m-3 has-text-centered ">
                                     <p className="title is-6 has-text-grey">You haven't played any games yet!</p>
                                 </div>
