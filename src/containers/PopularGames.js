@@ -1,12 +1,12 @@
-import useAxios from "axios-hooks";
 import GamesTable from "./GamesTable";
+import useAxios from "axios-hooks";
 
 export default function PopularGames(props) {
     const [{data, loading}] = useAxios(
         {
             url: "https://api.rawg.io/api/games/lists/main",
             params: {
-                key: "2b40908800ad4989923c71fab96f88af",
+                key: "369cf2c19c054c37a837596e83e2eace",
                 ordering: "relevance"
             },
             transformResponse: [function (data) {
@@ -16,6 +16,14 @@ export default function PopularGames(props) {
             }]
         }
     )
+
+
+    // // COMMENT THIS OUT LATER
+    // const data = require("../popular.json").results.map((game) => {
+    //     return new Date(game.released) <= new Date() ? game : null;
+    // }).filter(Boolean);
+    // console.log(data);
+    // const loading = false;
 
     return (
         <div className="card mt-3">

@@ -17,7 +17,7 @@ export default function RecentlyPlayedGames(props) {
                     .sort((a, b) => {
                         let aDate = new Date(a.dayPlayed);
                         let bDate = new Date(b.dayPlayed);
-                        return (aDate > bDate) ? 1 : ((bDate > aDate) ? -1 : 0);
+                        return (aDate < bDate) ? 1 : ((bDate < aDate) ? -1 : 0);
                     })
                     .filter(record => {
                         if (uniqueGames.has(record.gameId)) {
@@ -35,7 +35,7 @@ export default function RecentlyPlayedGames(props) {
         {
             baseURL: "https://api.rawg.io/api/games",
             params: {
-                key: "2b40908800ad4989923c71fab96f88af",
+                key: "369cf2c19c054c37a837596e83e2eace",
             },
         },
         {manual: true}
@@ -51,25 +51,30 @@ export default function RecentlyPlayedGames(props) {
     );
 
     useEffect(() => {
-        if (historyData) {
-            setFinalLoading(true);
-            Promise.all(
-                historyData.map((record, index) => {
+        async function retrieveDetails() {
+            if (historyData) {
+                setFinalLoading(true);
+                console.log(`Starting: ${JSON.stringify(historyData)}`);
+                let index = 0;
+                for (const record of historyData) {
                     console.log(`Attempting: ${record.gameId}`);
-                    return executeDetail({
-                        url: `/${record.gameId}`
-                    }).then(details => {
+                    try {
+                        let details = await executeDetail({
+                            url: `/${record.gameId}`
+                        });
                         historyData[index] = {...historyData[index], ...details.data};
-                    }).catch((error) => {
+                    } catch (error) {
                         console.log(`Inside error: ${error}`);
-                    });
-                })).then(() => {
+                    }
+
+                    ++index;
+                }
                 setFinalData(historyData);
                 setFinalLoading(false);
-            }).catch((error) => {
-                console.log(`Outside error: ${error}`);
-            });
+            }
         }
+
+        retrieveDetails();
     }, [historyData, executeDetail]);
 
     return (
