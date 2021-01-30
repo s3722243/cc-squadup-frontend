@@ -14,10 +14,10 @@ export default function FindPlayersDialog(props) {
         {
             url: "https://wd2gypcbr9.execute-api.us-east-1.amazonaws.com/test/findmatch",
             method: "post",
-            transformResponse: [function (data) {
+            transformResponse: ((data) => {
                 console.log("transform: " + data);
                 return JSON.parse(data).users;
-            }],
+            }),
         },
         {manual: true}
     );
@@ -39,16 +39,21 @@ export default function FindPlayersDialog(props) {
 
         while (retryCount < 3) {
             try {
-                await execute({
+                let response = await execute({
                     data: {
                         username: currentUser.getUsername(),
                         game_id: actualSelectedGame.id.toString(),
                         playersNeeded: input.players
                     }
                 });
-                if (data.length > 0) {
+
+                console.log("response: " + JSON.stringify(response));
+
+                if (response.data.length > 0) {
+                    console.log("success: " + response.data);
                     retryCount = Number.MAX_SAFE_INTEGER;
                 } else {
+                    console.log("empty: " + response.data);
                     ++retryCount;
                 }
             } catch (e) {
