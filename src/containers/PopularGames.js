@@ -17,14 +17,6 @@ export default function PopularGames(props) {
         }
     )
 
-
-    // // COMMENT THIS OUT LATER
-    // const data = require("../popular.json").results.map((game) => {
-    //     return new Date(game.released) <= new Date() ? game : null;
-    // }).filter(Boolean);
-    // console.log(data);
-    // const loading = false;
-
     return (
         <div className="card mt-3">
             <header className="card-header">

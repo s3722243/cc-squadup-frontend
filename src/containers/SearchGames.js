@@ -30,6 +30,7 @@ export default function SearchGames(props) {
         }, [searchQuery, execute]
     );
 
+
     return (
         <div className="card">
             <div className="card-content">
