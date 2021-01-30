@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import {BrowserRouter as Router, Link} from "react-router-dom";
 import "bulma/css/bulma.min.css";
 import 'bulmaswatch/darkly/bulmaswatch.min.css'
-import "@creativebulma/bulma-divider/dist/bulma-divider.min.css";
 import "@fortawesome/fontawesome-free/css/all.css";
 import './App.css';
 import Routes from "./Routes";
@@ -91,7 +90,7 @@ function App() {
                             <strong>SquadUp</strong> by Lachlan Furlong (s3722243) and Jeffin Poovely (s3656024) - RMIT
                             Cloud
                             Computing, Summer semester 2021. Video-game data and images sourced using <a
-                            href="https://rawg.io">RAWG
+                            href="https://rawg.io/apidocs" target="_blank" rel="noopener noreferrer">RAWG
                             API</a>.
                         </p>
                     </div>
