@@ -1,19 +1,69 @@
 import {useForm} from "react-hook-form";
 import {useEffect, useState} from "react";
+import useAxios from "axios-hooks";
+import useCurrentUser from "../hooks/UseCurrentUser";
 
 export default function FindPlayersDialog(props) {
-    const {register, handleSubmit, errors, reset} = useForm({shouldUnregister: false});
+    const currentUser = useCurrentUser();
+    const {register, handleSubmit, errors} = useForm({shouldUnregister: false});
     const [isLoading, setLoading] = useState(false);
     const [count, setCount] = useState(0);
+    const [finalData, setFinalData] = useState(null);
+    const [{data, error}, execute] = useAxios(
+        {
+            url: "https://wd2gypcbr9.execute-api.us-east-1.amazonaws.com/test/findmatch",
+            method: "post",
+            transformResponse: [function (data) {
+                return data === "Failure" ? data : JSON.parse(data);
+            }],
+        },
+        {manual: true}
+    );
+
+    useEffect(() => {
+        setFinalData(null);
+    }, [props.selectedGame]);
+
 
     async function onSubmit(input) {
+        setFinalData(null);
         setCount(0);
         setLoading(true);
 
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        console.log("Start");
+        let retryCount = 0;
 
-        reset();
+        while (!finalData && retryCount < 2) {
+            try {
+                await execute({
+                    data: {
+                        username: currentUser.getUsername(),
+                        game_id: props.selectedGame.id.toString(),
+                        playersNeeded: input.players
+                    }
+                });
+
+                console.log("data: " + data);
+
+                if (data !== "Failure") {
+                    setFinalData(data);
+
+                    // Success
+                    retryCount = Number.MAX_SAFE_INTEGER;
+                } else {
+                    console.log("failed text: " + data);
+                    ++retryCount;
+                }
+            } catch (e) {
+                console.log("failed 500: " + error.response.data);
+                ++retryCount;
+            }
+        }
+
+        // Ran out of retries - no data
+        if (!finalData) {
+            setFinalData([]);
+        }
+
         setLoading(false);
         setCount(0);
     }
@@ -73,7 +123,8 @@ export default function FindPlayersDialog(props) {
                                             <div className="field">
                                                 <label className="label">Platform</label>
                                                 <div className="control">
-                                                    <div className={`select ${errors.platform ? "is-danger" : ""}`}>
+                                                    <div
+                                                        className={`select is-fullwidth ${errors.platform ? "is-danger" : ""}`}>
                                                         <select
                                                             name="platform"
                                                             ref={register({required: `You must select a platform!`})}
@@ -127,7 +178,8 @@ export default function FindPlayersDialog(props) {
                                             <div className="field">
                                                 <label className="label">Region (optional)</label>
                                                 <div className="control">
-                                                    <div className={`select ${errors.region ? "is-danger" : ""}`}>
+                                                    <div
+                                                        className={`select is-fullwidth ${errors.region ? "is-danger" : ""}`}>
                                                         <select
                                                             name="region"
                                                             defaultValue="">
@@ -160,11 +212,16 @@ export default function FindPlayersDialog(props) {
                                             </div>
                                         </form>
                                     </div>
+                                    {!isLoading && finalData &&
                                     <div className="column is-8">
-                                        <div className="box">
+                                        <div className="box mt-3">
+                                            <h1 className="title is-4">
+                                                {finalData.length > 0 ? "Found players!" : "Could not find players!"}
+                                            </h1>
 
                                         </div>
                                     </div>
+                                    }
                                 </div>
                             </div> :
                             <div className="m-3 has-text-centered ">
