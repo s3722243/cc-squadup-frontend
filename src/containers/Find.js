@@ -2,12 +2,16 @@ import useCurrentUser from "../hooks/UseCurrentUser";
 import RecentlyPlayedGames from "./RecentlyPlayedGames";
 import PopularGames from "./PopularGames";
 import SearchGames from "./SearchGames";
+import FindPlayersDialog from "./FindPlayersDialog";
+import {useState} from "react";
 
 export default function Find() {
     const currentUser = useCurrentUser();
+    const [selectedGame, setSelectedGame] = useState(null);
 
     function selectGame(game) {
         console.log(game.id);
+        setSelectedGame(game);
     }
 
     return (
@@ -26,16 +30,7 @@ export default function Find() {
                             <PopularGames selectedCallback={selectGame}/>
                         </div>
                         <div className="column is-8 ">
-                            <div className="card">
-                                <header className="card-header">
-                                </header>
-                                <p className="card-header-title">Find players</p>
-                                <div className="card-content">
-                                    <div className="content">
-
-                                    </div>
-                                </div>
-                            </div>
+                            <FindPlayersDialog selectedGame={selectedGame}/>
                         </div>
                     </div>
                 </div>
