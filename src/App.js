@@ -24,69 +24,79 @@ function App() {
 
     return (
         <Router>
-            <nav className="navbar" style={{backgroundColor: "#39434d"}}>
-                <div className="container">
-                    <div className="navbar-brand">
-                        <Link to={"/"} className="navbar-item" style={{fontWeight: "bold"}}>
-                            <p className="title" style={{fontWeight: "bold"}}>SquadUp</p>
-                        </Link>
-                        <div
-                            className={`navbar-burger burger ${isActiveHamburger ? "is-active" : ""}`}
-                            onClick={() => setActiveHamburger(!isActiveHamburger)}
-                            data-target="navMenu"
-                        >
-                            <span/>
-                            <span/>
-                            <span/>
-                        </div>
-                    </div>
-                    <div id="navMenu" className={`navbar-menu ${isActiveHamburger ? "is-active" : ""}`}>
-                        <div className="navbar-start">
-                            <Link to={"/about"} className="navbar-item">
-                                About
-                            </Link>
-
-                            {currentUser &&
-                            <Link to={"/find"} className="navbar-item">
-                                Find players
-                            </Link>
-                            }
-                        </div>
-
-                        {currentUser ? (
-                            <div className="navbar-end">
-                                <Link to={"/profile"} className="navbar-item">
-                                    {currentUser.username}
+            <div style={{
+                display: "flex",
+                minHeight: "100vh",
+                flexDirection: "column"
+            }}>
+                <div style={{flex: 1}}>
+                    <nav className="navbar" style={{backgroundColor: "#39434d"}}>
+                        <div className="container">
+                            <div className="navbar-brand">
+                                <Link to={"/"} className="navbar-item" style={{fontWeight: "bold"}}>
+                                    <p className="title" style={{fontWeight: "bold"}}>SquadUp</p>
                                 </Link>
-                                <Link to={"/"} className="navbar-item" onClick={logout}>
-                                    Logout
-                                </Link>
+                                <div
+                                    className={`navbar-burger burger ${isActiveHamburger ? "is-active" : ""}`}
+                                    onClick={() => setActiveHamburger(!isActiveHamburger)}
+                                    data-target="navMenu"
+                                >
+                                    <span/>
+                                    <span/>
+                                    <span/>
+                                </div>
                             </div>
-                        ) : (
-                            <div className="navbar-end">
-                                <Link to={"/login"} className="navbar-item">
-                                    Login
-                                </Link>
-                                <Link to={"/register"} className="navbar-item">
-                                    Register
-                                </Link>
+                            <div id="navMenu" className={`navbar-menu ${isActiveHamburger ? "is-active" : ""}`}>
+                                <div className="navbar-start">
+                                    <Link to={"/about"} className="navbar-item">
+                                        About
+                                    </Link>
+
+                                    {currentUser &&
+                                    <Link to={"/find"} className="navbar-item">
+                                        Find players
+                                    </Link>
+                                    }
+                                </div>
+
+                                {currentUser ? (
+                                    <div className="navbar-end">
+                                        <Link to={"/profile"} className="navbar-item">
+                                            {currentUser.username}
+                                        </Link>
+                                        <Link to={"/"} className="navbar-item" onClick={logout}>
+                                            Logout
+                                        </Link>
+                                    </div>
+                                ) : (
+                                    <div className="navbar-end">
+                                        <Link to={"/login"} className="navbar-item">
+                                            Login
+                                        </Link>
+                                        <Link to={"/register"} className="navbar-item">
+                                            Register
+                                        </Link>
+                                    </div>
+                                )}
                             </div>
-                        )}
+                        </div>
+                    </nav>
+                    <div className="container mt-3">
+                        <Routes/>
                     </div>
                 </div>
-            </nav>
-            <div className="container mt-3">
-                <Routes/>
+                <footer className="footer mt-6">
+                    <div className="content has-text-centered">
+                        <p>
+                            <strong>SquadUp</strong> by Lachlan Furlong (s3722243) and Jeffin Poovely (s3656024) - RMIT
+                            Cloud
+                            Computing, Summer semester 2021. Video-game data and images sourced using <a
+                            href="https://rawg.io">RAWG
+                            API</a>.
+                        </p>
+                    </div>
+                </footer>
             </div>
-            <footer className="footer">
-                <div className="content has-text-centered">
-                    <p>
-                        <strong>SquadUp</strong> by Lachlan Furlong (s3722243) and Jeffin Poovely (s3656024) - RMIT Cloud
-                        Computing, Summer semester 2021. Video-game data and images sourced using <a href="https://rawg.io">RAWG
-                        API</a>.
-                    </p>
-                </div>
-            </footer>
         </Router>
     );
 }

@@ -8,62 +8,56 @@ export default function FindPlayersDialog(props) {
     const {register, handleSubmit, errors} = useForm({shouldUnregister: false});
     const [isLoading, setLoading] = useState(false);
     const [count, setCount] = useState(0);
-    const [finalData, setFinalData] = useState(null);
+    const [actualSelectedGame, setActualSelectedGame] = useState(null);
+    const [showResults, setShowResults] = useState(false);
     const [{data, error}, execute] = useAxios(
         {
             url: "https://wd2gypcbr9.execute-api.us-east-1.amazonaws.com/test/findmatch",
             method: "post",
             transformResponse: [function (data) {
-                return data === "Failure" ? data : JSON.parse(data);
+                console.log("transform: " + data);
+                return JSON.parse(data).users;
             }],
         },
         {manual: true}
     );
 
     useEffect(() => {
-        setFinalData(null);
+        if (!isLoading) {
+            setActualSelectedGame(props.selectedGame);
+        }
+
+        setShowResults(false);
     }, [props.selectedGame]);
 
-
     async function onSubmit(input) {
-        setFinalData(null);
+        setShowResults(false);
         setCount(0);
         setLoading(true);
 
         let retryCount = 0;
 
-        while (!finalData && retryCount < 2) {
+        while (retryCount < 3) {
             try {
                 await execute({
                     data: {
                         username: currentUser.getUsername(),
-                        game_id: props.selectedGame.id.toString(),
+                        game_id: actualSelectedGame.id.toString(),
                         playersNeeded: input.players
                     }
                 });
-
-                console.log("data: " + data);
-
-                if (data !== "Failure") {
-                    setFinalData(data);
-
-                    // Success
+                if (data.length > 0) {
                     retryCount = Number.MAX_SAFE_INTEGER;
                 } else {
-                    console.log("failed text: " + data);
                     ++retryCount;
                 }
             } catch (e) {
-                console.log("failed 500: " + error.response.data);
+                console.log("failed 500: " + e);
                 ++retryCount;
             }
         }
 
-        // Ran out of retries - no data
-        if (!finalData) {
-            setFinalData([]);
-        }
-
+        setShowResults(true);
         setLoading(false);
         setCount(0);
     }
@@ -95,11 +89,11 @@ export default function FindPlayersDialog(props) {
             <div className="card-content">
                 <div className="content">
                     {
-                        props.selectedGame ?
+                        actualSelectedGame ?
                             <div>
                                 <div style={{position: "relative"}}>
                                     <div className="hero" style={{
-                                        backgroundImage: `url(${props.selectedGame.background_image})`,
+                                        backgroundImage: `url(${actualSelectedGame.background_image})`,
                                         maskImage: "linear-gradient(to top, rgba(0,0,0,0) 0%,rgba(1,1,1,1) 100%",
                                         WebkitMaskImage: "linear-gradient(to top, rgba(0,0,0,0) 0%,rgba(1,1,1,1) 100%",
                                         minHeight: "256px",
@@ -114,7 +108,7 @@ export default function FindPlayersDialog(props) {
                                         bottom: "15%",
                                         left: "5%",
                                     }}>
-                                        {props.selectedGame.name}
+                                        {actualSelectedGame.name}
                                     </span>
                                 </div>
                                 <div className="columns">
@@ -130,7 +124,7 @@ export default function FindPlayersDialog(props) {
                                                             ref={register({required: `You must select a platform!`})}
                                                             defaultValue="">
                                                             <option value="" disabled>Select a platform</option>
-                                                            {props.selectedGame.platforms.map((platform) =>
+                                                            {actualSelectedGame.platforms.map((platform) =>
                                                                 <option
                                                                     key={platform.platform.id}
                                                                     value={platform.platform.id}
@@ -212,16 +206,19 @@ export default function FindPlayersDialog(props) {
                                             </div>
                                         </form>
                                     </div>
-                                    {!isLoading && finalData &&
                                     <div className="column is-8">
+                                        {!isLoading && showResults &&
                                         <div className="box mt-3">
-                                            <h1 className="title is-4">
-                                                {finalData.length > 0 ? "Found players!" : "Could not find players!"}
-                                            </h1>
-
+                                            {data && data.length > 0 ?
+                                                <>
+                                                    <h1 className="title is-4">Found players!</h1>
+                                                    {data.map((username) => <p>{username}</p>)}
+                                                </> :
+                                                <h1 className="title is-4">Could not find players!</h1>
+                                            }
                                         </div>
+                                        }
                                     </div>
-                                    }
                                 </div>
                             </div> :
                             <div className="m-3 has-text-centered ">
