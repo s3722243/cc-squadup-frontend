@@ -6,6 +6,7 @@ import NotFound from "./containers/NotFound";
 import Login from "./containers/Login";
 import Find from "./containers/Find";
 import Register from "./containers/Register";
+import Profile from "./containers/Profile";
 
 export default function Routes() {
     return (
@@ -15,6 +16,7 @@ export default function Routes() {
             <Route exact path="/find" component={Find}/>
             <Route exact path="/login" component={Login}/>
             <Route exact path="/register" component={Register}/>
+            <Route exact path="/profile" component={Profile}/>
             <Route component={NotFound}/>
         </Switch>
     );

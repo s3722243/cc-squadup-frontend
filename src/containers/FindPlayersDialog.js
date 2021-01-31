@@ -43,7 +43,9 @@ export default function FindPlayersDialog(props) {
                     data: {
                         username: currentUser.getUsername(),
                         game_id: actualSelectedGame.id.toString(),
-                        playersNeeded: input.players
+                        playersNeeded: input.players,
+                        console: input.platform,
+                        region: input.region === "" ? null : input.region
                     }
                 });
 

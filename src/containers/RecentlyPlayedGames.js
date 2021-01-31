@@ -9,7 +9,7 @@ export default function RecentlyPlayedGames(props) {
     const [finalLoading, setFinalLoading] = useState(true);
     const [{data: historyData}, executeHistory] = useAxios(
         {
-            baseURL: "https://aybxaw98mk.execute-api.us-east-1.amazonaws.com/dev/retrieve-player-info/",
+            baseURL: "https://wd2gypcbr9.execute-api.us-east-1.amazonaws.com/test/history",
             transformResponse: [function (data) {
                 let uniqueGames = new Set();
 
@@ -20,10 +20,10 @@ export default function RecentlyPlayedGames(props) {
                         return (aDate < bDate) ? 1 : ((bDate < aDate) ? -1 : 0);
                     })
                     .filter(record => {
-                        if (uniqueGames.has(record.gameId)) {
+                        if (uniqueGames.has(record.gamePlayed)) {
                             return false;
                         } else {
-                            uniqueGames.add(record.gameId);
+                            uniqueGames.add(record.gamePlayed);
                             return true;
                         }
                     });
@@ -57,10 +57,10 @@ export default function RecentlyPlayedGames(props) {
                 console.log(`Starting: ${JSON.stringify(historyData)}`);
                 let index = 0;
                 for (const record of historyData) {
-                    console.log(`Attempting: ${record.gameId}`);
+                    console.log(`Attempting: ${record.gamePlayed}`);
                     try {
                         let details = await executeDetail({
-                            url: `/${record.gameId}`
+                            url: `/${record.gamePlayed}`
                         });
                         historyData[index] = {...historyData[index], ...details.data};
                     } catch (error) {
