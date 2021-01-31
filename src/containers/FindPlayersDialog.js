@@ -2,6 +2,7 @@ import {useForm} from "react-hook-form";
 import {useEffect, useState} from "react";
 import useAxios from "axios-hooks";
 import useCurrentUser from "../hooks/UseCurrentUser";
+import {icons} from "../util/Icons";
 
 export default function FindPlayersDialog(props) {
     const currentUser = useCurrentUser();
@@ -51,7 +52,7 @@ export default function FindPlayersDialog(props) {
 
                 console.log("response: " + JSON.stringify(response));
 
-                if (response.data.length > 0) {
+                if (response.data !== null) {
                     console.log("success: " + response.data);
                     retryCount = Number.MAX_SAFE_INTEGER;
                 } else {
@@ -66,23 +67,25 @@ export default function FindPlayersDialog(props) {
 
         setShowResults(true);
         setLoading(false);
-        setCount(0);
+        setCount(null);
     }
 
     /**
      * Source: https://stackoverflow.com/a/57137212
      */
     useEffect(() => {
-        // save intervalId to clear the interval when the
-        // component re-renders
-        const intervalId = setInterval(() => {
-            setCount(count + 1);
-        }, 1000);
+        if (count != null) {
+            // save intervalId to clear the interval when the
+            // component re-renders
+            const intervalId = setInterval(() => {
+                setCount(count + 1);
+            }, 1000);
 
-        // clear interval on re-render to avoid memory leaks
-        return () => {
-            clearInterval(intervalId)
-        };
+            // clear interval on re-render to avoid memory leaks
+            return () => {
+                clearInterval(intervalId)
+            };
+        }
         // add timeLeft as a dependency to re-rerun the effect
         // when we update it
     }, [count]);
@@ -169,7 +172,7 @@ export default function FindPlayersDialog(props) {
                                                             required: `You must select the number of players!`,
                                                             valueAsNumber: true
                                                         })}
-                                                        defaultValue="">
+                                                        defaultValue="2">
                                                     </input>
                                                     {errors.players &&
                                                     <div className="help is-danger">{errors.players.message}</div>}
@@ -219,7 +222,34 @@ export default function FindPlayersDialog(props) {
                                             {data && data.length > 0 ?
                                                 <>
                                                     <h1 className="title is-4">Found players!</h1>
-                                                    {data.map((username) => <p>{username}</p>)}
+                                                    {data.map((user) => {
+                                                        console.log("user: " + JSON.stringify(user));
+                                                        return <>
+                                                            <div className="columns">
+                                                                <div className="column is-6">
+                                                                    <h5>Username</h5>
+                                                                    <p>{user.userName}</p>
+                                                                </div>
+                                                                <div className="column is-6">
+                                                                    <h5>Details</h5>
+                                                                    {user.playerInformationList.map((info) =>
+                                                                        Object.entries(info).map(([detailKey, detailValue]) => {
+                                                                            if (detailKey in icons) {
+                                                                                return <div className="icon-text">
+                                                                                    <span className="icon"><i
+                                                                                        className={icons[detailKey].iconClass}
+                                                                                        data-char-content={icons[detailKey].content}/></span>
+                                                                                    <span>{detailValue}</span>
+                                                                                </div>;
+                                                                            } else {
+                                                                                return null;
+                                                                            }
+                                                                        })
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </>;
+                                                    })}
                                                 </> :
                                                 <h1 className="title is-4">Could not find players!</h1>
                                             }

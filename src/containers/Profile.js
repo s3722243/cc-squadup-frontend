@@ -2,6 +2,7 @@ import useCurrentUser from "../hooks/UseCurrentUser";
 import {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import useAxios from "axios-hooks";
+import {icons} from "../util/Icons";
 
 export default function Profile() {
     const currentUser = useCurrentUser();
@@ -17,7 +18,7 @@ export default function Profile() {
         },
         {manual: true}
     );
-    const [{data: retrieveData}, executeRetrieve] = useAxios(
+    const [{data: retrieveData, loading: retrieveLoading}, executeRetrieve] = useAxios(
         {
             baseURL: "https://wd2gypcbr9.execute-api.us-east-1.amazonaws.com/test/retrieve-player-info/",
         },
@@ -68,7 +69,7 @@ export default function Profile() {
                        key={identifier}
                        defaultValue={retrieveData ? retrieveData[identifier] : null}
                        onChange={() => setChanged(true)}
-                       disabled={isLoading}
+                       disabled={isLoading || retrieveLoading}
                 />
                 <span className="icon is-left"><i className={iconClass} data-char-content={content}/></span>
             </div>
@@ -98,47 +99,18 @@ export default function Profile() {
                                             />
                                         </div>
                                     </div>
-                                    {profileInput({
-                                        label: "Discord username/tag",
-                                        identifier: "discord",
-                                        iconClass: "fab fa-discord"
-                                    })}
-                                    {profileInput({
-                                        label: "Playstation username",
-                                        identifier: "playstation",
-                                        iconClass: "fab fa-playstation"
-                                    })}
-                                    {profileInput({
-                                        label: "Xbox gamertag",
-                                        identifier: "xbox",
-                                        iconClass: "fab fa-xbox"
-                                    })}
-                                    {profileInput({
-                                        label: "Nintendo Switch friend code",
-                                        identifier: "switch",
-                                        iconClass: "fas pf-char fa-fw",
-                                        content: "N"
-                                    })}
-                                    {profileInput({
-                                        label: "Steam username",
-                                        identifier: "steam",
-                                        iconClass: "fab fa-steam"
-                                    })}
-                                    {profileInput({
-                                        label: "Epic games username",
-                                        identifier: "epic",
-                                        iconClass: "fas pf-char fa-fw",
-                                        content: "E"
-                                    })}
-                                    {profileInput({
-                                        label: "Battle.net BattleTag", identifier: "battle",
-                                        iconClass: "fab fa-battle-net"
-                                    })}
+                                    {profileInput(icons.discord)}
+                                    {profileInput(icons.playstation)}
+                                    {profileInput(icons.xbox)}
+                                    {profileInput(icons.switch)}
+                                    {profileInput(icons.steam)}
+                                    {profileInput(icons.epic)}
+                                    {profileInput(icons.battle)}
                                     <div className="field">
                                         <div className="control">
                                             <button
-                                                className={`button is-primary ${isLoading ? "is-loading" : ""}`}
-                                                disabled={isLoading || !changed}
+                                                className={`button is-primary ${isLoading || retrieveLoading ? "is-loading" : ""}`}
+                                                disabled={isLoading || !changed || retrieveLoading}
                                             >
                                                 <span>Save changes</span>
                                             </button>
