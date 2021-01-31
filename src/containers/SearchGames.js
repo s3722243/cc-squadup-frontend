@@ -20,7 +20,7 @@ export default function SearchGames(props) {
                 if (searchQuery) {
                     execute({
                         params: {
-                            key: "369cf2c19c054c37a837596e83e2eace",
+                            key: "ef019ffe0a864817afdc4a0e88916144",
                             search: searchQuery
                         }
                     });
