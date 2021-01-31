@@ -10,7 +10,7 @@ export default function Profile() {
     const [changed, setChanged] = useState(false);
     const [successMessage, setSuccessMessage] = useState(null);
     const {register, handleSubmit} = useForm();
-    const [, executeSaveUser] = useAxios(
+    const [{response: saveResponse}, executeSaveUser] = useAxios(
         {
             url: "https://wd2gypcbr9.execute-api.us-east-1.amazonaws.com/test/saveuser",
             method: "post",
@@ -29,17 +29,21 @@ export default function Profile() {
             console.log("Executing retrieve...");
             executeRetrieve({url: `/${currentUser.getUsername()}`});
         }
-    }, [currentUser, executeRetrieve]);
+    }, [currentUser, executeRetrieve, saveResponse]);
 
     async function onSubmit(input) {
         setLoading(true);
         try {
-            console.log("Executing save..." + JSON.stringify(input));
+            // Remove empty values
+            let d = Object.fromEntries(Object.entries({
+                username: currentUser.getUsername(),
+                ...input
+            }).filter(([_, v]) => v !== ""));
+
+            console.log("Executing save..." + JSON.stringify(d));
+
             await executeSaveUser({
-                data: {
-                    username: currentUser.getUsername(),
-                    steam: input.steam
-                }
+                data: d
             });
             setFailedMessage(null);
             setSuccessMessage("Your details were successfully updated");
@@ -52,6 +56,24 @@ export default function Profile() {
         }
         setLoading(false);
     }
+
+    const profileInput = ({label, identifier, iconClass, content}) => {
+        return <div className="field">
+            <label className="label">{label}</label>
+            <div className="control has-icons-left">
+                <input className="input"
+                       type="text"
+                       name={identifier}
+                       ref={register}
+                       key={identifier}
+                       defaultValue={retrieveData ? retrieveData[identifier] : null}
+                       onChange={() => setChanged(true)}
+                       disabled={isLoading}
+                />
+                <span className="icon is-left"><i className={iconClass} data-char-content={content}/></span>
+            </div>
+        </div>;
+    };
 
     return (
         <div className="container">
@@ -76,18 +98,42 @@ export default function Profile() {
                                             />
                                         </div>
                                     </div>
-                                    <div className="field">
-                                        <label className="label">Steam username</label>
-                                        <div className="control">
-                                            <input className="input"
-                                                   type="text"
-                                                   name="steam"
-                                                   ref={register}
-                                                   defaultValue={retrieveData ? retrieveData.steam : null}
-                                                   onChange={() => setChanged(true)}
-                                            />
-                                        </div>
-                                    </div>
+                                    {profileInput({
+                                        label: "Discord username/tag",
+                                        identifier: "discord",
+                                        iconClass: "fab fa-discord"
+                                    })}
+                                    {profileInput({
+                                        label: "Playstation username",
+                                        identifier: "playstation",
+                                        iconClass: "fab fa-playstation"
+                                    })}
+                                    {profileInput({
+                                        label: "Xbox gamertag",
+                                        identifier: "xbox",
+                                        iconClass: "fab fa-xbox"
+                                    })}
+                                    {profileInput({
+                                        label: "Nintendo Switch friend code",
+                                        identifier: "switch",
+                                        iconClass: "fas pf-char fa-fw",
+                                        content: "N"
+                                    })}
+                                    {profileInput({
+                                        label: "Steam username",
+                                        identifier: "steam",
+                                        iconClass: "fab fa-steam"
+                                    })}
+                                    {profileInput({
+                                        label: "Epic games username",
+                                        identifier: "epic",
+                                        iconClass: "fas pf-char fa-fw",
+                                        content: "E"
+                                    })}
+                                    {profileInput({
+                                        label: "Battle.net BattleTag", identifier: "battle",
+                                        iconClass: "fab fa-battle-net"
+                                    })}
                                     <div className="field">
                                         <div className="control">
                                             <button
